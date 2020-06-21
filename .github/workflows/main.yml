@@ -1,0 +1,36 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'johns_hopkins/**'
+  schedule:
+    - cron: '* */8 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          fetch-depth: 1
+      - name: Setup Python
+        # more: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8' # Semantic version range syntax (ex 3.x) or exact version of a Python version
+      - name: Install dependenties
+        run: pip install -r requirements.txt
+      - name: Update CSV data files
+        run: python main.py
+      - name: Commit changes back to repository
+        uses: actions/checkout@master
+        run: |
+          git config user.email "jbeto@gmail.com"
+          git config user.name "jjbeto via GitHub Actions"
+          git add .
+          git status
+          git commit -m "🤖 CD bot updating resources"
+          git push -u origin master

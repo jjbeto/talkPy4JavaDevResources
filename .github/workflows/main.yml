@@ -27,9 +27,13 @@ jobs:
         run: python main.py
       - name: Commit changes back to repository
         run: |
-          git config user.email "jbeto@gmail.com"
-          git config user.name "jjbeto via GitHub Actions"
-          git add .
-          git status
-          git commit -m "🤖 CD bot updating resources"
-          git push -u origin master
+          if [ $(git status --porcelain | wc -l) -eq "0" ]; then
+            echo "  🟢 Git repo is up-to-date."
+          else
+            git config user.email "jbeto@gmail.com"
+            git config user.name "jjbeto via GitHub Actions"
+            git add .
+            git status
+            git commit -m "🤖 CD bot updating resources"
+            git push -u origin master
+          fi

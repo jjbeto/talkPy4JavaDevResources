@@ -26,7 +26,6 @@ jobs:
       - name: Update CSV data files
         run: python main.py
       - name: Commit changes back to repository
-        uses: actions/checkout@master
         run: |
           git config user.email "jbeto@gmail.com"
           git config user.name "jjbeto via GitHub Actions"
